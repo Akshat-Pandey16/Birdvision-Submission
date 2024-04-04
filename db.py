@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy import Column, Float, Integer, String, create_engine
+from sqlalchemy.orm import Session, declarative_base
 
 DATABASE_URL = "sqlite:///./products.db"
 
@@ -15,6 +15,7 @@ class Product(Base):
     description = Column(String)
     price = Column(Float)
     count = Column(Integer)
+
 
 def create_database():
     Base.metadata.create_all(bind=engine)
