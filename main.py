@@ -16,11 +16,22 @@ create_database()
 
 @app.get("/")
 def index():
+    """Root endpoint"""
     return {"message": "Go to /docs to view the APIs documentation."}
 
 
 @app.get("/products")
 def get_products(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    """
+    Retrieve a list of products.
+
+    Parameters:
+    - `offset` (int, optional): Number of items to skip from the beginning.
+    - `limit` (int, optional): Maximum number of items to retrieve.
+
+    Returns:
+    - `products` (list): List of products retrieved.
+    """
     try:
         products = db.query(Product).offset(offset).limit(limit).all()
         return {"products": products}
@@ -30,6 +41,15 @@ def get_products(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)
 
 @app.get("/products/{id}")
 def get_product_by_id(id: int, db: Session = Depends(get_db)):
+    """
+    Retrieve a product by its ID.
+
+    Parameters:
+    - `id` (int): The ID of the product to retrieve.
+
+    Returns:
+    - `Product` (dict): Details of the product retrieved.
+    """
     try:
         product = db.query(Product).filter(Product.id == id).first()
         if product:
@@ -42,6 +62,19 @@ def get_product_by_id(id: int, db: Session = Depends(get_db)):
 
 @app.post("/products")
 def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
+    """
+    Create a new product.
+
+    Parameters:
+    - `product_data` (ProductModel): Details of the product to be created.
+        - `title` (str): Title of the product.
+        - `description` (str): Description of the product.
+        - `price` (float): Price of the product.
+        - `count` (int): Count of the product.
+
+    Returns:
+    - `Product Added` (int): ID of the newly created product.
+    """
     try:
         product_exists = (
             db.query(Product)
@@ -75,6 +108,16 @@ def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
 
 @app.put("/products/{id}")
 def update_product(id: int, product_data: ProductModel, db: Session = Depends(get_db)):
+    """
+    Update an existing product.
+
+    Parameters:
+    - `id` (int): The ID of the product to be updated.
+    - `product_data` (ProductModel): New details of the product.
+
+    Returns:
+    - `Product Updated` (int): ID of the updated product.
+    """
     try:
         product_exists = db.query(Product).filter(Product.id == id).first()
         if product_exists is None:
@@ -93,6 +136,15 @@ def update_product(id: int, product_data: ProductModel, db: Session = Depends(ge
 
 @app.delete("/products/{id}")
 def delete_product(id: int, db: Session = Depends(get_db)):
+    """
+    Delete a product by its ID.
+
+    Parameters:
+    - `id` (int): The ID of the product to be deleted.
+
+    Returns:
+    - `Product Deleted` (int): ID of the deleted product.
+    """
     try:
         product = db.query(Product).filter(Product.id == id).first()
         if product is None:
@@ -107,6 +159,12 @@ def delete_product(id: int, db: Session = Depends(get_db)):
 
 @app.delete("/products")
 def delete_all_products(db: Session = Depends(get_db)):
+    """
+    Delete all products.
+
+    Returns:
+    - `message` (str): Confirmation message of successful deletion.
+    """
     try:
         db.query(Product).delete()
         db.commit()
