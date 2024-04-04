@@ -40,14 +40,14 @@ def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
             Product.title == product_data.title,
             Product.description == product_data.description,
             Product.price == product_data.price,
-            Product.color == product_data.color,
+            Product.count == product_data.count,
         )
         .first()
     )
     if product_exists:
         raise HTTPException(
             status_code=400,
-            detail="Product with the same title, description, price, and color already exists",
+            detail="Product with the same title, description, price, and count already exists",
         )
     product = Product(
         title=product_data.title,
