@@ -19,8 +19,8 @@ def index():
 
 
 @app.get("/products")
-def get_products(db: Session = Depends(get_db)):
-    products = db.query(Product).offset(0).limit(7).all()
+def get_products(ost: int = 0, lmt: int = 10, db: Session = Depends(get_db)):
+    products = db.query(Product).offset(ost).limit(lmt).all()
     return {"products": products}
 
 
@@ -37,7 +37,7 @@ def create_product(Products: ProductModel, db: Session = Depends(get_db)):
     description = Products.description
     price = Products.price
     count = Products.count
-    product = Product(title=title, descsription=description, price=price, count=count)
+    product = Product(title=title, description=description, price=price, count=count)
     db.add(product)
     db.commit()
     db.refresh(product)
