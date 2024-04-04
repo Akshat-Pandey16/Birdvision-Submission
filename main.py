@@ -29,15 +29,32 @@ def get_products_by_id(id: int, db: Session = Depends(get_db)):
     product = db.query(Product).filter(Product.id == id).first()
     if product:
         return {"Product": product}
+    raise HTTPException(status_code=404, detail=f"Product {id} not found")
 
 
 @app.post("/products")
-def create_product(Products: ProductModel, db: Session = Depends(get_db)):
-    title = Products.title
-    description = Products.description
-    price = Products.price
-    count = Products.count
-    product = Product(title=title, description=description, price=price, count=count)
+def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
+    product_exists = (
+        db.query(Product)
+        .filter(
+            Product.title == product_data.title,
+            Product.description == product_data.description,
+            Product.price == product_data.price,
+            Product.color == product_data.color,
+        )
+        .first()
+    )
+    if product_exists:
+        raise HTTPException(
+            status_code=400,
+            detail="Product with the same title, description, price, and color already exists",
+        )
+    product = Product(
+        title=product_data.title,
+        description=product_data.description,
+        price=product_data.price,
+        count=product_data.count,
+    )
     db.add(product)
     db.commit()
     db.refresh(product)
