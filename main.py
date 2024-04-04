@@ -45,8 +45,18 @@ def create_product(Products: ProductModel, db: Session = Depends(get_db)):
 
 
 @app.put("/products/{id}")
-def update_product(id: int):
-    return {"Api to update product of an id"}
+def update_product(id: int, product: ProductModel, db: Session = Depends(get_db)):
+    product_exists = db.query(Product).filter(Product.id == id).first()
+
+    if product_exists is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    product_exists.title = product.title
+    product_exists.description = product.description
+    product_exists.price = product.price
+    product_exists.count = product.count
+    db.commit()
+    return product_exists
 
 
 @app.delete("/products/{id}")
