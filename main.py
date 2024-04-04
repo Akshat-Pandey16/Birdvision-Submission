@@ -27,7 +27,9 @@ def get_products(db: Session = Depends(get_db)):
 
 @app.get("/products/{id}")
 def get_products_by_id(db: Session = Depends(get_db)):
-    return {"Api to get product for an id"}
+    product = db.query(Product).filter(Product.id == id).first()
+    if product:
+        return product
 
 
 @app.post("/products")

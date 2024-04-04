@@ -14,7 +14,7 @@ class Product(Base):
     title = Column(String, index=True)
     description = Column(String)
     price = Column(Float)
-
+    count = Column(Integer)
 
 def create_database():
     Base.metadata.create_all(bind=engine)
