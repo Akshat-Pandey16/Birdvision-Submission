@@ -20,7 +20,7 @@ def index():
 
 @app.get("/products")
 def get_products(db: Session = Depends(get_db)):
-    products = db.query(Product).offset(0).limit(5).all()
+    products = db.query(Product).offset(0).limit(7).all()
     return {"products": products}
 
 
@@ -41,7 +41,7 @@ def create_product(Products: ProductModel, db: Session = Depends(get_db)):
     db.add(product)
     db.commit()
     db.refresh(product)
-    return {"Product Added": product}
+    return {"Product Added"}
 
 
 @app.put("/products/{id}")
@@ -49,19 +49,25 @@ def update_product(id: int, product: ProductModel, db: Session = Depends(get_db)
     product_exists = db.query(Product).filter(Product.id == id).first()
 
     if product_exists is None:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail=f"Product {id} not found")
 
     product_exists.title = product.title
     product_exists.description = product.description
     product_exists.price = product.price
     product_exists.count = product.count
     db.commit()
-    return {"Product Updated": product_exists}
+    return {f"Product {id} Updated"}
 
 
 @app.delete("/products/{id}")
-def delete_product(id: int):
-    return {"Api to delete product of an id"}
+def delete_product(id: int, db: Session = Depends(get_db)):
+    try:
+        db.query(Product).filter(Product.id == id).delete()
+        db.commit()
+        return {f"Product {id} deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error deleting product: {str(e)}")
 
 
 @app.delete("/products")
