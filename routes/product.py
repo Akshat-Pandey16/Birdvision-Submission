@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.exc import SQLAlchemyError
@@ -9,6 +11,15 @@ from models.models import ProductModel
 router = APIRouter(tags=["products"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+
+logging.basicConfig(
+    filename="error.log",
+    level=logging.ERROR,
+    format="%(asctime)s %(levelname)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+logger = logging.getLogger(__name__)
 
 
 @router.get("/products")
@@ -32,7 +43,8 @@ def get_products(
         products = db.query(Product).offset(offset).limit(limit).all()
         return {"products": products}
     except SQLAlchemyError as e:
-        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+        logger.error(f"Database query failed in get_products: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database query failed")
 
 
 @router.get("/products/{id}")
@@ -55,7 +67,8 @@ def get_product_by_id(
         else:
             raise HTTPException(status_code=404, detail=f"Product {id} not found")
     except SQLAlchemyError as e:
-        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+        logger.error(f"Database query failed in get_product_by_id: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database query failed")
 
 
 @router.post("/products")
@@ -104,8 +117,9 @@ def create_product(
         db.refresh(product)
         return {"Product Added": product.id}
     except SQLAlchemyError as e:
+        logger.error(f"Error creating product: {str(e)}")
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating product: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error creating product")
 
 
 @router.put("/products/{id}")
@@ -156,8 +170,9 @@ def update_product(
         db.commit()
         return {"Product Updated": id}
     except SQLAlchemyError as e:
+        logger.error(f"Error updating product: {str(e)}")
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating product: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error updating product")
 
 
 @router.delete("/products/{id}")
@@ -181,8 +196,9 @@ def delete_product(
         db.commit()
         return {"Product Deleted": id}
     except SQLAlchemyError as e:
+        logger.error(f"Error deleting product: {str(e)}")
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting product: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error deleting product")
 
 
 @router.delete("/products")
@@ -200,7 +216,6 @@ def delete_all_products(
         db.commit()
         return {"message": "All products deleted successfully"}
     except SQLAlchemyError as e:
+        logger.error(f"Error deleting all products: {str(e)}")
         db.rollback()
-        raise HTTPException(
-            status_code=500, detail=f"Error deleting all products: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail="Error deleting all products")

@@ -40,6 +40,7 @@ To get started with the Birdvision Submission project, follow these steps:
 
 ### Important
 
+- Username and Email should be unique
 - When signing up, email should be according to email standard
 - Password should be minimum 8 characters long, with combination of numbers, alphabets (upper and lowercase) and special characters, according to python's inbuilt password check
 
