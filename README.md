@@ -19,11 +19,11 @@ To get started with the Birdvision Submission project, follow these steps:
 
 ### Setting Up a Virtual Environment
 
-To create a virtual environment, navigate to the project's root directory and run:
+- To create a virtual environment, navigate to the project's root directory and run:
 `python -m venv venv`
-Activate the virtual environment:
-On Windows: `.\venv\Scripts\activate`
-On macOS and Linux: `source venv/bin/activate`
+- Activate the virtual environment:
+- On Windows: `.\venv\Scripts\activate`
+- On macOS and Linux: `source venv/bin/activate`
 
 ### Installing Dependencies
 
