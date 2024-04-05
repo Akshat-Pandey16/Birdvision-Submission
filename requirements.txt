@@ -3,3 +3,8 @@ fastapi
 sqlalchemy
 pytest
 httpx
+python-jose
+python-multipart
+argon2-cffi
+pydantic[email]
+python-dotenv

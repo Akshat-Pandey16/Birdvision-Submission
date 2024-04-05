@@ -12,7 +12,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
 @router.get("/products")
-def get_products(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def get_products(
+    offset: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+):
     """
     Retrieve a list of products.
 
@@ -31,7 +36,9 @@ def get_products(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)
 
 
 @router.get("/products/{id}")
-def get_product_by_id(id: int, db: Session = Depends(get_db)):
+def get_product_by_id(
+    id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     """
     Retrieve a product by its ID.
 
@@ -52,7 +59,11 @@ def get_product_by_id(id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/products")
-def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
+def create_product(
+    product_data: ProductModel,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+):
     """
     Create a new product.
 
@@ -98,7 +109,12 @@ def create_product(product_data: ProductModel, db: Session = Depends(get_db)):
 
 
 @router.put("/products/{id}")
-def update_product(id: int, product_data: ProductModel, db: Session = Depends(get_db)):
+def update_product(
+    id: int,
+    product_data: ProductModel,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+):
     """
     Update an existing product.
 
@@ -126,7 +142,9 @@ def update_product(id: int, product_data: ProductModel, db: Session = Depends(ge
 
 
 @router.delete("/products/{id}")
-def delete_product(id: int, db: Session = Depends(get_db)):
+def delete_product(
+    id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     """
     Delete a product by its ID.
 
@@ -149,7 +167,9 @@ def delete_product(id: int, db: Session = Depends(get_db)):
 
 
 @router.delete("/products")
-def delete_all_products(db: Session = Depends(get_db)):
+def delete_all_products(
+    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     """
     Delete all products.
 
