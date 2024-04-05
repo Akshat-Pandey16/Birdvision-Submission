@@ -36,17 +36,16 @@ def get_user(db: Session, username: str):
 def authenticate_user(db: Session, username: str, password: str):
     user = get_user(db, username)
     if not user or not verify_password(password, user.hashed_password):
-        print("Hello")
         return False
     return user
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
+    enc = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    enc.update({"exp": expire})
+    encoded_jwt = jwt.encode(enc, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

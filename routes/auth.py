@@ -19,6 +19,18 @@ router = APIRouter(tags=["auth"])
 
 @router.post("/signup")
 def signup(signup_data: SignUpModel, db: Session = Depends(get_db)):
+    """
+    Endpoint to register a new user.
+
+    Parameters:
+    - `signup_data` (SignUpModel): Data containing username, email, and password.
+        - username (str): Username.
+        - email (str): Email (should adhere to email standards).
+        - password (str): Password. (should be at least 8 characters long, with combination of letters, numbers, and special characters)
+
+    Returns:
+    - `msg` (str): Success message.
+    """
     username = signup_data.username
     email = signup_data.email
     password = signup_data.password
@@ -36,6 +48,16 @@ def signup(signup_data: SignUpModel, db: Session = Depends(get_db)):
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
+    """
+    Endpoint to login and get an access token.
+
+    Parameters:
+    - `form_data` (OAuth2PasswordRequestForm): Form data containing username and password.
+    
+    Returns:
+    - `access_token` (str): JWT access token.
+    - `token_type` (str): Token type.
+    """
     username = form_data.username
     password = form_data.password
     user = authenticate_user(
