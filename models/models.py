@@ -12,7 +12,3 @@ class SignUpModel(BaseModel):
     username: str
     email: Optional[EmailStr]
     password: str
-
-class LoginModel(BaseModel):
-    username: str
-    password: str

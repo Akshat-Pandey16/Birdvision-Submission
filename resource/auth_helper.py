@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import Session
 from models.db import User
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from jose import jwt
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -43,7 +43,7 @@ def authenticate_user(db: Session, username: str, password: str):
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     enc = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     enc.update({"exp": expire})

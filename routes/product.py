@@ -126,14 +126,33 @@ def update_product(
     - `Product Updated` (int): ID of the updated product.
     """
     try:
+        title = product_data.title
+        description = product_data.description
+        price = product_data.price
+        count = product_data.count
+        exist = (
+            db.query(Product)
+            .filter(
+                Product.title == title,
+                Product.description == description,
+                Product.price == price,
+                Product.count == count,
+            )
+            .first()
+        )
+        if exist:
+            raise HTTPException(
+                status_code=400,
+                detail="Product with the same title, description, price, and count already exists, updation failed",
+            )
         product_exists = db.query(Product).filter(Product.id == id).first()
         if product_exists is None:
             raise HTTPException(status_code=404, detail=f"Product {id} not found")
 
-        product_exists.title = product_data.title
-        product_exists.description = product_data.description
-        product_exists.price = product_data.price
-        product_exists.count = product_data.count
+        product_exists.title = title
+        product_exists.description = description
+        product_exists.price = price
+        product_exists.count = count
         db.commit()
         return {"Product Updated": id}
     except SQLAlchemyError as e:
