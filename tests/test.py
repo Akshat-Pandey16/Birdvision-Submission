@@ -96,7 +96,7 @@ def test_get_product_by_id():
 def test_update_product():
     token = login_for_access_token()
     response = client.put(
-        "/products/1",
+        "/products/5",
         headers={"Authorization": f"Bearer {token}"},
         json={
             "title": "Updated Product",
