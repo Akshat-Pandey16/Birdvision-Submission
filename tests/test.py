@@ -87,7 +87,7 @@ def test_create_product():
 
 def test_get_product_by_id():
     token = login_for_access_token()
-    response = client.get("/products/1", headers={"Authorization": f"Bearer {token}"})
+    response = client.get("/products/5", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert "Product" in response.json()
 
