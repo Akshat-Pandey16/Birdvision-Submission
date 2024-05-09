@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 parent_dir = Path(__file__).parents[1]
 sys.path.append(str(parent_dir))
-from main import app
-from models.db import Base, get_db
+from main import app  # noqa: E402
+from models.db import Base, get_db  # noqa: E402
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 # SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/products?charset=utf8mb4"
