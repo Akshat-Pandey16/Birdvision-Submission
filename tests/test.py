@@ -11,8 +11,9 @@ from main import app
 from models.db import Base, get_db
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+# SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/products?charset=utf8mb4"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, echo=True
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -87,7 +88,7 @@ def test_create_product():
 
 def test_get_product_by_id():
     token = login_for_access_token()
-    response = client.get("/products/5", headers={"Authorization": f"Bearer {token}"})
+    response = client.get("/products/1", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert "Product" in response.json()
 
