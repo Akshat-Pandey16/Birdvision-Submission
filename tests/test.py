@@ -13,7 +13,7 @@ from models.db import Base, get_db  # noqa: E402
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 # SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/products?charset=utf8mb4"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, echo=True
+    SQLALCHEMY_DATABASE_URL, pool_pre_ping=True
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -96,7 +96,7 @@ def test_get_product_by_id():
 def test_update_product():
     token = login_for_access_token()
     response = client.put(
-        "/products/5",
+        "/products/1",
         headers={"Authorization": f"Bearer {token}"},
         json={
             "title": "Updated Product",
