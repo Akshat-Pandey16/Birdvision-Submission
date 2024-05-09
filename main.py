@@ -4,6 +4,8 @@ from routes import auth
 from routes import product
 import contextlib
 
+import sys
+sys.path.insert(0, 'resource/')
 
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
